@@ -1,0 +1,58 @@
+<html>
+    <head>
+        <title>Test</title>
+    </head>
+    <body>
+        <h1>Title</h1>
+        <input type="number" id="tstamp" placeholder="Time stamp (s)" value="44100000"/><input type="number" id="dur" placeholder="Duration" value="1323000"/><button id="play">Play</button>
+        <script>
+            let audios = []
+            document.getElementById("play").onclick = () => {
+                const tstamp = parseFloat(document.getElementById("tstamp").value)
+                const dur = parseFloat(document.getElementById("dur").value)
+                console.log(tstamp, dur)
+                if (audios.length > 0) {
+                    audios.forEach( (a) => {
+                        console.log(a)
+                        a.pause()
+                        a.src = ""
+                        a.load()
+                    })
+                }
+                audios = []
+                // let a = new Audio(`/api/?t=${tstamp}&d=${dur}`)
+                // a.addEventListener("canplay", () => {
+                //     a.play()
+                // })
+
+                // let b = new Audio(`/api/?t=${tstamp+dur}&d=${dur}`)
+                // a.addEventListener("ended", () => {
+                //     b.play()
+                //     console.log("heelloo")
+                // })
+                
+                for(let t=tstamp; t<tstamp+dur; t+=5 * 44100) {
+                    let d = Math.min(tstamp+dur-t, 5 * 44100)
+                    let a = new Audio(`/api/?t=${t}&d=${d}`)
+                    if(audios.length > 0) {
+                        let aPrev = audios[audios.length-1]
+                        a.load()
+                        aPrev.addEventListener("ended", () => {
+                            a.play()
+                        })
+                        
+                        audios.push(a)
+                        // console.log(audios)
+                        continue
+                    }
+                    a.addEventListener("canplay", () => {
+                        a.play()
+                    })
+                    audios.push(a)
+                }
+
+            }
+
+        </script>
+    </body>
+</html>

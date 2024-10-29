@@ -1,0 +1,13 @@
+
+
+services:
+  web:
+    env_file:
+      - .env
+    image: aw-player/django
+    build: .
+    ports: 
+      - "8000:8000"
+    volumes:
+      - /home/plaf/Documents/raspy/tetto/recs/rec_tetto_20220315_232910.flac:/recs/test.flac 
+      - ./app:/app
